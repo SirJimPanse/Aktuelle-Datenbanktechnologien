@@ -41,25 +41,25 @@ public class Controller {
 	}
     }
 
-    public static void insertData(Connection conn, String sql) {
-	PreparedStatement pst = null;
-	try {
-	    pst = conn.prepareStatement(sql);
-	    pst.executeUpdate();
+	public static void insertData(Connection conn, String sql) {
+		PreparedStatement pst = null;
+		try {
+			pst = conn.prepareStatement(sql);
+			pst.executeUpdate();
 
-	} catch (SQLException ex) {
-	    ex.printStackTrace();
-	} finally {
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} finally {
 
-	    try {
-		if (pst != null) {
-		    pst.close();
+			try {
+				if (pst != null) {
+					pst.close();
+				}
+
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
 		}
-
-	    } catch (SQLException ex) {
-		ex.printStackTrace();
-	    }
-	}
     }
 
 }

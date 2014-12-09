@@ -1,0 +1,5 @@
+INDEX VERSION 1.126+C:\Users\Jim Panse\aktdbtechworkspace\Aktuelle-Datenbanktechnologien\.metadata\.plugins\org.eclipse.jdt.core
+1792845342.index
+2591352924.index
+510489044.index
+1032320178.index
