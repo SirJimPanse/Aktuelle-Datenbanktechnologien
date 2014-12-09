@@ -1,0 +1,64 @@
+﻿Study4
+
+
+Aufgabe 1
+1)
+SELECT ST_Distance(a.geo, b.geo)
+FROM geodbland a, geodbland b
+WHERE a.id='3' AND b.id='5';
+
+
+2)
+ SELECT Distinct ON (ST_DISTANCE(a.geo, b.geo)) a.id, b.id, ST_DISTANCE(a.geo, b.geo)
+ FROM geodbland a, geodbland b
+ WHERE a.id != b.id;
+
+
+3)
+ SELECT Distinct ON (ST_Intersection(a.geo, b.geo)) a.id, b.id, ST_Intersection(a.geo, b.geo)
+ FROM geodbland a, geodbland b
+ WHERE ST_IsEmpty ( ST_Intersection ( a.geo, b.geo ) ) = FALSE
+ AND a.id != b.id;
+
+
+4)
+ SELECT Distinct ON (ST_Intersection(ST_Envelope(a.geo),ST_Envelope(b.geo))) a.id, b.id,    ST_Intersection(ST_Envelope(a.geo), ST_Envelope(b.geo))
+ FROM geodbland a, geodbland b
+ WHERE ST_IsEmpty ( ST_Intersection ( a.geo, b.geo ) ) = FALSE
+ AND a.id != b.id;
+
+
+
+
+
+
+5) 
+SELECT COUNT(a.id)
+FROM geodbland a, geodbland b
+WHERE ST_IsEmpty ( ST_Intersection ( a.geo, b.geo ) ) = FALSE
+AND a.id != b.id;
+
+
+6)
+SELECT a.id
+FROM geodbland a, geodbland b
+WHERE ST_IsEMPTY( ST_Intersection ( a.geo, b.geo) ) = FALSE 
+AND a.id != b.id
+GROUP BY a.id
+having COUNT(*) > 1;
+
+
+7)
+ SELECT a.id, b.id, ST_INTERSECTION(a.geo, b.geo), ST_INTERSECTION(b.geo, a.geo)
+ FROM geodbland a, geodbland b
+ WHERE ST_IsEmpty ( ST_INTERSECTION ( a.geo, b.geo ) ) = FALSE
+ AND a.id != b.id;
+
+
+
+
+
+
+
+
+ANALYZE VERBOSE coordinates;
