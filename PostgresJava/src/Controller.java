@@ -1,0 +1,115 @@
+import java.sql.*;
+import java.util.Properties;
+
+import org.postgis.PGgeometry;
+
+public class Controller {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Connection conn = null;
+
+		String url = "jdbc:postgresql://141.100.70.17/study4";
+		Properties props = new Properties();
+		props.setProperty("user", "study4");
+		props.setProperty("password", "study4");
+
+		try {
+			conn = DriverManager.getConnection(url, props);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		insertData(
+				conn,
+				"INSERT INTO coordinates(id, geo) VALUES(1, "
+						+ "'LINESTRING( 3 6,4 7,5 7,4 8, 5 9,7 7,5 6,7 5,6 4,5 4,6 5,4 5,3 6)');");
+
+		insertData(conn, "INSERT INTO coordinates(id, geo) VALUES(2, "
+				+ "'LINESTRING(7 10,4 13,5 14,7 13,8 14, 9 13,7 10)');");
+
+		insertData(
+				conn,
+				"INSERT INTO coordinates(id, geo) VALUES(3, "
+						+ "'LINESTRING(7 12,10 12,10 11,11 11,11 9,9 9,9 11,8 11,7 12 )');");
+
+		insertData(conn, "INSERT INTO coordinates(id, geo) VALUES(4, "
+				+ "'LINESTRING(10 10,12 9,12 7,11 6,10 6, 10 10 )');");
+
+		insertData(conn, "INSERT INTO coordinates(id, geo) VALUES(5, "
+				+ "'LINESTRING(6 3,9 5,10 4,10 2,9 2,9 3,6 3)');");
+		ResultSet result = selectData(
+				conn,
+				"SELECT a.id AS id1, b.id as id2, ST_INTERSECTION(a.geo, b.geo), ST_INTERSECTION(b.geo, a.geo)\n"
+						+ " FROM geodbland a, geodbland b\n"
+						+ " WHERE ST_IsEmpty ( ST_INTERSECTION ( a.geo, b.geo ) ) = FALSE\n"
+						+ " AND a.id != b.id;");
+		try {
+			while (result.next()) {
+
+				System.out.println(result.getObject(1));
+				System.out.println(result.getInt(2));
+				PGgeometry object = (PGgeometry) result.getObject(3);
+				System.out.println(object.toString());
+				PGgeometry object2 = (PGgeometry) result.getObject(4);
+				System.out.println(object2.toString());
+
+				try {
+					if (conn != null) {
+						conn.close();
+					}
+
+				} catch (SQLException ex) {
+					ex.printStackTrace();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			e.getLocalizedMessage();
+		}
+	}
+
+	public static void insertData(Connection conn, String sql) {
+		PreparedStatement pst = null;
+		try {
+			pst = conn.prepareStatement(sql);
+			pst.executeUpdate();
+
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} finally {
+
+			try {
+				if (pst != null) {
+					pst.close();
+				}
+
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	public static ResultSet selectData(Connection conn, String sql) {
+		PreparedStatement pst = null;
+		ResultSet resultSet = null;
+		try {
+			Statement qs = conn.createStatement();
+			resultSet = qs.executeQuery(sql);
+
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} finally {
+
+			try {
+				if (pst != null) {
+					pst.close();
+				}
+
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		}
+		return resultSet;
+	}
+}
